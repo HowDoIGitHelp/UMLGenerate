@@ -1,0 +1,69 @@
+/home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/BooksBorrowing/solution.kt
+booksBorrowing.LibraryCard
+booksBorrowing.BorrowableItem
+booksBorrowing.Periodical
+booksBorrowing.Book
+booksBorrowing.PC
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/BooksBorrowing.uml
+
+/home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/FactoryMethodPattern/shipment/solution.kt
+shipment.Delivery
+shipment.StandardDelivery
+shipment.Shipment
+shipment.ExpressDelivery
+shipment.ExpressShipment
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/Shipment.uml
+
+/home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/FactoryMethodPattern/requestedFiles/requestedFile.kt
+requestedFile.StandardDelivery
+requestedFile.Shipment
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/ShipmentNoFactory.uml
+
+/home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/AbstractFactoryPattern/requestedFiles/requestedFile.kt
+requestedFile.Monster
+requestedFile.NormalBokoblin
+requestedFile.NormalMoblin
+requestedFile.NormalLizalflos
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/TextBasedZeldaNoAbstractFactory.uml
+
+/home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/AbstractFactoryPattern/tbzelda/solution.kt
+tbzelda.Monster
+tbzelda.Bokoblin
+tbzelda.Moblin
+tbzelda.Lizalflos
+tbzelda.Dungeon
+tbzelda.NormalBokoblin
+tbzelda.NormalMoblin
+tbzelda.NormalLizalflos
+tbzelda.EasyDungeon
+tbzelda.BlueBokoblin
+tbzelda.BlueMoblin
+tbzelda.BlueLizalflos
+tbzelda.MediumDungeon
+tbzelda.SilverBokoblin
+tbzelda.SilverMoblin
+tbzelda.SilverLizalflos
+tbzelda.HardDungeon
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/TextBasedZelda.uml
+
+/home/rub/Projects/CMSC23CoursePack/Code/Kotlin Code/FactoryMethod/factoryMethod/factoryMethod.kt
+factoryMethod.Product
+factoryMethod.DefaultProduct
+factoryMethod.SpecialProductA
+factoryMethod.SpecialProductB
+factoryMethod.Factory
+factoryMethod.SpecialFactoryA
+factoryMethod.SpecialFactoryB
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/factoryMethod.uml
+
+/home/rub/Projects/CMSC23CoursePack/Code/Kotlin Code/AbstractFactory/abstractFactory/abstractFactory.kt
+abstractFactory.ProductA
+abstractFactory.ProductB
+abstractFactory.ProductAVariant1
+abstractFactory.ProductBVariant1
+abstractFactory.ProductAVariant2
+abstractFactory.ProductBVariant2
+abstractFactory.AbstractFactory
+abstractFactory.FactoryVariant1
+abstractFactory.FactoryVariant2
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/abstractFactory.uml
