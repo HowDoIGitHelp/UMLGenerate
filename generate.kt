@@ -19,19 +19,23 @@ fun completeProcess(process: ProcessBuilder, completionMessage: String = "comple
 }
 
 fun main() {
-    val umlInputs = File("umlInputs.in").readText().split("\n\n")
+    val umlInputs = File("umlInputs.in")
+        .readText()
+        .trimEnd()
+        .split("\n\n")
 
-    umlInputs.forEach {
-        val splitInput = it.split("\n")
+    for (umlInput in umlInputs) {
+        val splitInput = umlInput.split("\n")
         val umlOutputFileName = splitInput.last()
         val sourceFile = splitInput.first()
+        val programArgs = splitInput.drop(1)
 
         if (!pathExists(sourceFile))
             throw FileNotFoundException("path $sourceFile not found!")
 
         val buildProcess = ProcessBuilder("kotlinc", "uml.kt", splitInput.first(), "-include-runtime", "-d", "uml.jar")
             .apply { environment().remove("KOTLIN_RUNNER") }
-        val runProcess = ProcessBuilder("java", "-cp", "uml.jar", "umlGenerate.UmlKt", *splitInput.drop(1).toTypedArray())
+        val runProcess = ProcessBuilder("java", "-cp", "uml.jar", "umlGenerate.UmlKt", *programArgs.toTypedArray())
         val generateDiagramProcess = ProcessBuilder("java", "-jar", "plantuml-1.2025.7.jar", "-tsvg", umlOutputFileName)
 
         try {
@@ -48,7 +52,7 @@ fun main() {
 }
 
 fun debugAppEnvironment() {
-    println("=== APPLICATION ENVIRONMENT ===")
+    println("APPLICATION ENVIRONMENT")
     val env = System.getenv()
     env.keys.sorted().forEach { key ->
         if (key.contains("KOTLIN", ignoreCase = true)) {

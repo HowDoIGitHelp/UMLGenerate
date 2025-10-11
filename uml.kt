@@ -11,137 +11,132 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-fun shortType(type: KType?): String {
-    when (type) {
-        null -> return ""
-        else -> {
-            val classifier = type.classifier.toString().split(".").last()
-            val typeArgs = type.arguments
-            val shortArgs = typeArgs.map {
-                shortType(it.type)
-            }
-
-            val argument = when {
-                shortArgs.isEmpty() -> ""
-                else -> shortArgs.joinToString(",", "<", ">")
-            }
-
-            return "$classifier$argument"
-        }
+fun KType.shortType(): String {
+    val classifier = this.classifier.toString().split(".").last()
+    val shortArgs = this.arguments.map {
+        it.type?.shortType() ?: ""
     }
+
+    val argument = when {
+        shortArgs.isEmpty() -> ""
+        else -> shortArgs.joinToString(",", "<", ">")
+    }
+
+    return "$classifier$argument"
 }
 
-fun asArgMember(param: KParameter): String =
-    "${param.name}: ${shortType(param.type)}"
+fun KParameter.asArgMember(): String =
+    "${this.name}: ${this.type.shortType()}"
 
-fun paramString(function: KCallable<*>): String =
-    function.parameters.filter {
+fun KCallable<*>.paramString(): String =
+    this.parameters.filter {
         it.name != null
-    }.joinToString(separator = ", ", transform = ::asArgMember)
+    }.joinToString(separator = ", ", transform = KParameter::asArgMember)
 
-fun asUMLMember(member: KCallable<*>): String {
-    val vPrefix = when (member.visibility?.name) {
+fun KCallable<*>.asUMLMember(): String {
+    val vPrefix = when (this.visibility?.name) {
         "PRIVATE" -> "-"
         "PUBLIC" -> "+"
         "PROTECTED" -> "#"
         else -> ""
     }
-    val suffix = when(member) {
-        is KFunction -> "(${paramString(member)})"
+    val suffix = when(this) {
+        is KFunction -> "(${this.paramString()})"
         else -> ""
     }
-    val shortReturnType = shortType(member.returnType)
+    val shortReturnType = this.returnType.shortType()
     val returnType = if (shortReturnType == "Unit") "" else ": $shortReturnType"
-    return "$vPrefix ${member.name}$suffix$returnType"
+    return "$vPrefix ${this.name}$suffix$returnType"
 }
 
-fun umlMembers(clazz: KClass<*>): String {
-    val declaredMembers = declaredProperties(clazz) + declaredMethods(clazz)
+fun KClass<*>.umlMembers(): String {
+    val declaredMembers = this.declaredProperties() + this.declaredMethods()
     val propertiesPlusMethods = declaredMembers.joinToString(
         separator = "\n    ",
         prefix = "    ",
-        transform = ::asUMLMember
+        transform = KCallable<*>::asUMLMember
     )
-    return listOf(constructors(clazz), propertiesPlusMethods)
+    return listOf(this.constructors(), propertiesPlusMethods)
         .filter(String::isNotEmpty)
         .joinToString("\n")
 }
 
-fun declaredMethods(clazz: KClass<*>): List<KFunction<*>> {
-    val methodNames = clazz.java.declaredMethods.toList().map{ it.name }
-    return clazz.members.filter {
+fun KClass<*>.declaredMethods(): List<KFunction<*>> {
+    val methodNames = this.java.declaredMethods.toList().map{ it.name }
+    return this.members.filter {
         it.name in methodNames
     }.filterIsInstance<KFunction<*>>()
 }
 
-fun declaredProperties(clazz: KClass<*>): List<KProperty<*>> {
-    val fieldNames = clazz.java.declaredFields.toList().map{ it.name }
-    return clazz.members.filter {
+fun KClass<*>.declaredProperties(): List<KProperty<*>> {
+    val fieldNames = this.java.declaredFields.toList().map{ it.name }
+    return this.members.filter {
         it.name in fieldNames
     }.filterIsInstance<KProperty<*>>()
 }
 
-fun constructors(clazz: KClass<*>): String =
-    clazz.constructors.joinToString("\n") {
-        "    ${shortType(clazz)}(${paramString(it)})"
+fun KClass<*>.constructors(): String =
+    this.constructors.joinToString("\n") {
+        "    ${this.shortType()}(${it.paramString()})"
     }
 
-fun shortType(clazz: KClass<*>): String =
-    clazz.simpleName ?: "InvalidName"
+fun KClass<*>.shortType(): String =
+    this.simpleName ?: "InvalidName"
 
-fun superTypedPrefix(clazz: KClass<*>): String =
+fun KClass<*>.superTypedPrefix(): String =
     when {
-        clazz.java.isInterface -> " ..|> ${shortType(clazz)}"
-        else -> " --|> ${shortType(clazz)}"
+        this.java.isInterface -> " ..|> ${this.shortType()}"
+        else -> " --|> ${this.shortType()}"
     }
 
-fun relationships(clazz: KClass<*>): String =
-    clazz.supertypes.filter {
-        shortType(it) != "Any"
+fun KClass<*>.relationships(): String =
+    this.supertypes.filter {
+        it.shortType() != "Any"
     }.fold("") { acc, it ->
         when (val superClass = it.classifier) {
-            is KClass<*> -> "$acc\n${shortType(clazz)}${superTypedPrefix(superClass)}"
-            else -> "$acc\n${shortType(clazz)} --|> UnknownClassName"
+            is KClass<*> -> "$acc\n${this.shortType()}${superClass.superTypedPrefix()}"
+            else -> "$acc\n${this.shortType()} --|> UnknownClassName"
         }
     }.drop(1)
 
-fun header(clazz: KClass<*>): String =
+fun KClass<*>.header(): String =
     when {
-        clazz.java.isInterface -> "interface ${shortType(clazz)}"
-        clazz.isAbstract -> "abstract class ${shortType(clazz)}"
-        else -> "class ${shortType(clazz)}"
+        this.java.isInterface -> "interface ${this.shortType()}"
+        this.isAbstract -> "abstract class ${this.shortType()}"
+        else -> "class ${this.shortType()}"
     }
 
-fun classDiagram(clazz: KClass<*>): String =
-    "${header(clazz)}\n{\n${umlMembers(clazz)}\n}\n${relationships(clazz)}\n\n"
+fun KClass<*>.classDiagram(): String =
+    "${this.header()}\n{\n${this.umlMembers()}\n}\n${this.relationships()}\n\n"
 
-fun dependencySet(clazz: KClass<*>): Set<KClass<*>> {
+fun KClass<*>.dependencySet(): Set<KClass<*>> {
     val dependencies: MutableSet<KClass<*>> = mutableSetOf()
 
-    declaredMethods(clazz).forEach { method ->
+    for (method in this.declaredMethods()) {
         dependencies.addAll(method.parameters.map {
             it.type.classifier
         }.filterIsInstance<KClass<*>>())
         dependencies.addAll(listOf(method.returnType.classifier).filterIsInstance<KClass<*>>())
     }
 
-    dependencies.addAll(declaredProperties(clazz)
+    dependencies.addAll(this.declaredProperties()
         .map{ it.returnType.classifier }
-        .filterIsInstance<KClass<*>>())
+        .filterIsInstance<KClass<*>>()
+    )
 
     return dependencies.toSet()
 }
 
-fun dependencyRelationships(clazz: KClass<*>, relevantClasses: Set<KClass<*>>) : String =
-    dependencySet(clazz).intersect(relevantClasses).joinToString("\n") {
-        "${shortType(clazz)} ..> ${shortType(it)}"
+fun KClass<*>.dependencyRelationships(relevantClasses: Set<KClass<*>>) : String =
+    this.dependencySet().intersect(relevantClasses).joinToString("\n") {
+        "${this.shortType()} ..> ${it.shortType()}"
     }
 
 fun uml(classes: List<KClass<*>>): String {
     val classSet = classes.toSet()
-    val classDiagrams = classes.map(::classDiagram).fold("", String::plus)
+    val classDiagrams = classes.map(KClass<*>::classDiagram).fold("", String::plus)
     val dependencies = classes.map {
-        dependencyRelationships(it, classSet.minusElement(it))
+        it.dependencyRelationships(classSet.minusElement(it))
     }.filter(String::isNotEmpty).joinToString("\n")
 
     return "@startuml\n$classDiagrams$dependencies\n@enduml"
@@ -151,7 +146,7 @@ fun main(args: Array<String>) {
     val relevantClasses = args.dropLast(1).map {
         try {
             Class.forName(it).kotlin
-        } catch (exception: ClassNotFoundException) {
+        } catch (_: ClassNotFoundException) {
             println("Class not found: $it, skipping.")
             return@map null
         }
