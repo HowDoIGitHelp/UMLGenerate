@@ -46,7 +46,7 @@ tbzelda.SilverLizalflos
 tbzelda.HardDungeon
 /home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/TextBasedZelda.uml
 
-/home/rub/Projects/CMSC23CoursePack/Code/Kotlin Code/FactoryMethod/factoryMethod/factoryMethod.kt
+/home/rub/Projects/CMSC23CoursePack/Code/Kotlin Code/FactoryMethodPattern/factoryMethod/factoryMethod.kt
 factoryMethod.Product
 factoryMethod.DefaultProduct
 factoryMethod.SpecialProductA
@@ -54,9 +54,9 @@ factoryMethod.SpecialProductB
 factoryMethod.Factory
 factoryMethod.SpecialFactoryA
 factoryMethod.SpecialFactoryB
-/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/factoryMethod.uml
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/FactoryMethod.uml
 
-/home/rub/Projects/CMSC23CoursePack/Code/Kotlin Code/AbstractFactory/abstractFactory/abstractFactory.kt
+/home/rub/Projects/CMSC23CoursePack/Code/Kotlin Code/AbstractFactoryPattern/abstractFactory/abstractFactory.kt
 abstractFactory.ProductA
 abstractFactory.ProductB
 abstractFactory.ProductAVariant1
@@ -66,4 +66,26 @@ abstractFactory.ProductBVariant2
 abstractFactory.AbstractFactory
 abstractFactory.FactoryVariant1
 abstractFactory.FactoryVariant2
-/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/abstractFactory.uml
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/AbstractFactory.uml
+
+/home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/DecoratorPattern/formattedSentence/solution.kt
+formattedSentence.Sentence
+formattedSentence.FormattedSentence
+formattedSentence.BorderedSentence
+formattedSentence.FancySentence
+formattedSentence.UpperCaseSentence
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/FormattedSentence.uml
+
+/home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/AdapterPattern/printableShipment/solution.kt
+printableShipment.Printable
+printableShipment.PrintableShipment
+printableShipment.Shipment
+printableShipment.ExpressShipment
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/PrintableShipment.uml
+
+/home/rub/Projects/CMSC23CoursePack/Code/Kotlin Code/AdapterPattern/adapter/adapter.kt
+adapter.AbstractDependency
+adapter.RealDependency
+adapter.RequiredInterface
+adapter.Adapter
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/Adapter.uml
