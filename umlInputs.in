@@ -89,3 +89,10 @@ adapter.RealDependency
 adapter.RequiredInterface
 adapter.Adapter
 /home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/Adapter.uml
+
+/home/rub/Projects/CMSC23CoursePack/Code/Kotlin Code/DecoratorPattern/decorator/decorator.kt
+decorator.SimpleClass
+decorator.BaseDecorator
+decorator.Decorator1
+decorator.Decorator2
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/Decorator.uml
