@@ -96,3 +96,12 @@ decorator.BaseDecorator
 decorator.Decorator1
 decorator.Decorator2
 /home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/Decorator.uml
+
+/home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/StrategyPattern/fractionCalculator/solution.kt
+fractionCalculator.Calculation
+fractionCalculator.Addition
+fractionCalculator.Subtraction
+fractionCalculator.Multiplication
+fractionCalculator.Division
+fractionCalculator.Operation
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/FractionCalculator.uml
