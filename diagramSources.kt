@@ -1,8 +1,8 @@
 package umlGenerate
 
-val sources = diagramSources {
+val umlSources = diagramSources {
 
-    umlOutputDir = "/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/"
+    umlOutputDir = "umlOutputs/"
     svgOutputDir = umlOutputDir
 
     diagram("BooksBorrowing") {

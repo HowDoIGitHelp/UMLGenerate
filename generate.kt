@@ -24,16 +24,37 @@ fun main() {
         .trimEnd()
         .split("\n\n")
 
-    for (umlInput in umlInputs) {
-        val splitInput = umlInput.split("\n")
-        val umlOutputFileName = splitInput.last()
-        val sourceFile = splitInput.first()
-        val programArgs = splitInput.drop(1)
+    val umlOutputDirectory = umlSources.umlOutputDir
+    for (umlInput in umlSources.diagrams) {
+        // val splitInput = umlInput.split("\n")
+        val sourceFiles = umlInput.sources.map { it.filename }
+        val qualifiedClassNames = umlInput.packages.map { pkg ->
+            pkg.includedClasses.map {
+                "${pkg.name}.${it.name}"
+            }
+        }.fold(listOf<String>()) { l1,l2 ->
+            l1 + l2
+        }
 
-        if (!pathExists(sourceFile))
-            throw FileNotFoundException("path $sourceFile not found!")
+        val umlOutputFileName = "${umlInput.umlOutputDir}${umlInput.umlOutput}"
+        val programArgs = qualifiedClassNames + listOf(umlOutputFileName)
 
-        val buildProcess = ProcessBuilder("kotlinc", "uml.kt", splitInput.first(), "-include-runtime", "-d", "uml.jar")
+        umlInput.packages.forEach {
+            println(it.name)
+            it.includedClasses.forEach {
+                println(it.name)
+            }
+        }
+
+        println(sourceFiles)
+        println(programArgs)
+
+        sourceFiles.forEach {
+            if (!pathExists(it))
+                throw FileNotFoundException("path $it not found!")
+        }
+
+        val buildProcess = ProcessBuilder("kotlinc", "uml.kt", *sourceFiles.toTypedArray(), "-include-runtime", "-d", "uml.jar")
             .apply { environment().remove("KOTLIN_RUNNER") }
         val runProcess = ProcessBuilder("java", "-cp", "uml.jar", "umlGenerate.UmlKt", *programArgs.toTypedArray())
         val generateDiagramProcess = ProcessBuilder("java", "-jar", "plantuml-1.2025.7.jar", "-tsvg", umlOutputFileName)

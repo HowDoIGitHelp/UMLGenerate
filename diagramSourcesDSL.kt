@@ -18,11 +18,12 @@ class Source {
 
 class SourceDir: MutableListAggregate() {
     lateinit var path: String
-    lateinit var sources: MutableList<Source>
+    var sources: MutableList<Source> = mutableListOf()
 
     fun source(set: Source.() -> String): Source {
         val newSource = Source()
         newSource.filename = newSource.set()
+        sources.add(newSource)
         return newSource
     }
 }
@@ -32,18 +33,20 @@ class IncludedClass {
 }
 
 class Package(var name: String): MutableListAggregate() {
-    lateinit var includedClasses: MutableList<IncludedClass>
+    var includedClasses: MutableList<IncludedClass> = mutableListOf()
 
     fun includedClass(set: IncludedClass.() -> String): IncludedClass {
         val newIncludedClass = IncludedClass()
         newIncludedClass.name = newIncludedClass.set()
+        includedClasses.add(newIncludedClass)
         return newIncludedClass
     }
 }
 
 open class Diagram(name: String): MutableListAggregate() {
-    lateinit var sourceDirs: MutableList<SourceDir>
-    lateinit var packages: MutableList<Package>
+    var sourceDirs: MutableList<SourceDir> = mutableListOf()
+    var packages: MutableList<Package> = mutableListOf()
+    var sources: MutableList<Source> = mutableListOf()
     lateinit var umlOutputDir: String
     var umlOutput: String = "$name.uml"
     lateinit var svgOutputDir: String
@@ -56,12 +59,13 @@ open class Diagram(name: String): MutableListAggregate() {
     fun source(set: Source.() -> String): Source {
         val newSource = Source()
         newSource.filename = newSource.set()
+        sources.add(newSource)
         return newSource
     }
 }
 
 class DiagramSources: MutableListAggregate() {
-    lateinit var diagrams: MutableList<Diagram>
+    var diagrams: MutableList<Diagram> = mutableListOf()
     var umlOutputDir: String? = null
     var svgOutputDir: String? = null
     var regenerate = false
@@ -82,7 +86,7 @@ fun diagramSources(set: DiagramSources.() -> Unit): DiagramSources {
 
 
 
-fun main() {
+fun notmain() {
     val diagramSources =
         diagramSources {
             regenerate = true
