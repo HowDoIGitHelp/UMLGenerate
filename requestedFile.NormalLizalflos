@@ -1,0 +1,30 @@
+@startuml
+interface Monster
+{
+    + announce()
+    + move()
+}
+
+
+class NormalBokoblin
+{
+    NormalBokoblin()
+    + announce()
+    + bludgeon()
+    + defend()
+    + move()
+}
+NormalBokoblin ..|> Monster
+
+class NormalMoblin
+{
+    NormalMoblin()
+    + announce()
+    + kick()
+    + move()
+    + stab()
+}
+NormalMoblin ..|> Monster
+
+
+@enduml

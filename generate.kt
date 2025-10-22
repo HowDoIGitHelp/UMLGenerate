@@ -24,39 +24,20 @@ fun main() {
         .trimEnd()
         .split("\n\n")
 
-    val umlOutputDirectory = umlSources.umlOutputDir
-    for (umlInput in umlSources.diagrams) {
-        // val splitInput = umlInput.split("\n")
-        val sourceFiles = umlInput.sources.map { it.filename }
-        val qualifiedClassNames = umlInput.packages.map { pkg ->
-            pkg.includedClasses.map {
-                "${pkg.name}.${it.name}"
-            }
-        }.fold(listOf<String>()) { l1,l2 ->
-            l1 + l2
-        }
+    for (umlInput in umlInputs) {
+        val splitInput = umlInput.split("\n")
+        val umlOutputFileName = splitInput.last()
+        val sourceFiles = splitInput.dropLast(1).filter { it.endsWith(".kt") }
+        val classes = splitInput.dropLast(1).filterNot { it.endsWith(".kt") }
 
-        val umlOutputFileName = "${umlInput.umlOutputDir}${umlInput.umlOutput}"
-        val programArgs = qualifiedClassNames + listOf(umlOutputFileName)
-
-        umlInput.packages.forEach {
-            println(it.name)
-            it.includedClasses.forEach {
-                println(it.name)
-            }
-        }
-
-        println(sourceFiles)
-        println(programArgs)
-
-        sourceFiles.forEach {
-            if (!pathExists(it))
-                throw FileNotFoundException("path $it not found!")
+        for (file in sourceFiles) {
+            if (!pathExists(file))
+                throw FileNotFoundException("path $file not found!")
         }
 
         val buildProcess = ProcessBuilder("kotlinc", "uml.kt", *sourceFiles.toTypedArray(), "-include-runtime", "-d", "uml.jar")
             .apply { environment().remove("KOTLIN_RUNNER") }
-        val runProcess = ProcessBuilder("java", "-cp", "uml.jar", "umlGenerate.UmlKt", *programArgs.toTypedArray())
+        val runProcess = ProcessBuilder("java", "-cp", "uml.jar", "umlGenerate.UmlKt", *classes.toTypedArray(), umlOutputFileName)
         val generateDiagramProcess = ProcessBuilder("java", "-jar", "plantuml-1.2025.7.jar", "-tsvg", umlOutputFileName)
 
         try {
@@ -81,6 +62,5 @@ fun debugAppEnvironment() {
         }
     }
 
-    // Check if KOTLIN_RUNNER is set in the app
     println("KOTLIN_RUNNER in app: ${System.getenv("KOTLIN_RUNNER")}")
 }
