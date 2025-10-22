@@ -105,3 +105,11 @@ fractionCalculator.Multiplication
 fractionCalculator.Division
 fractionCalculator.Operation
 /home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/FractionCalculator.uml
+
+/home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/StatePattern/statesOfMatter/solution.kt
+statesOfMatter.State
+statesOfMatter.Matter
+statesOfMatter.LiquidState
+statesOfMatter.SolidState
+statesOfMatter.GaseousState
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/StatesOfMatter.uml

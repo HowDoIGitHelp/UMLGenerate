@@ -7,6 +7,8 @@ import kotlin.io.path.deleteIfExists
 
 class ProcessCompletionException(message: String) : Exception(message)
 
+class UndefinedArgumentException(message: String): Exception(message)
+
 fun pathExists(pathString: String) = File(pathString).exists()
 
 fun completeProcess(process: ProcessBuilder, completionMessage: String = "completed process") {
@@ -18,7 +20,16 @@ fun completeProcess(process: ProcessBuilder, completionMessage: String = "comple
     }
 }
 
-fun main() {
+fun main(args: Array<String>) {
+    val booleanOptions = mutableMapOf("-regenerate" to false)
+
+    for (arg in args) {
+        if (arg in booleanOptions)
+            booleanOptions[arg] = true
+        else
+            throw UndefinedArgumentException("undefined argument $arg")
+    }
+
     val umlInputs = File("umlInputs.in")
         .readText()
         .trimEnd()
@@ -29,27 +40,39 @@ fun main() {
         val umlOutputFileName = splitInput.last()
         val sourceFiles = splitInput.dropLast(1).filter { it.endsWith(".kt") }
         val classes = splitInput.dropLast(1).filterNot { it.endsWith(".kt") }
+        val validSources = sourceFiles.all { pathExists(it) }
 
-        for (file in sourceFiles) {
-            if (!pathExists(file))
-                throw FileNotFoundException("path $file not found!")
+        if ((booleanOptions["-regenerate"] ?: false || !pathExists(umlOutputFileName)) && validSources) {
+            for (file in sourceFiles) {
+                if (!pathExists(file))
+                    throw FileNotFoundException("path $file not found!")
+            }
+
+            val buildProcess = ProcessBuilder("kotlinc", "uml.kt", *sourceFiles.toTypedArray(), "-include-runtime", "-d", "uml.jar")
+                .apply { environment().remove("KOTLIN_RUNNER") }
+            val runProcess = ProcessBuilder("java", "-cp", "uml.jar", "umlGenerate.UmlKt", *classes.toTypedArray(), umlOutputFileName)
+            val generateDiagramProcess = ProcessBuilder("java", "-jar", "plantuml-1.2025.7.jar", "-tsvg", umlOutputFileName)
+
+            try {
+                completeProcess(buildProcess, "building uml.jar complete")
+                completeProcess(runProcess, "generated $umlOutputFileName")
+                completeProcess(generateDiagramProcess, "generated diagram for $umlOutputFileName")
+                println()
+            } catch (e: ProcessCompletionException) {
+                println(e.message)
+            } finally {
+                Path("uml.jar").deleteIfExists()
+            }
+        } else if (!validSources) {
+            val invalidSources = sourceFiles.filterNot { pathExists(it) }
+            for (source in invalidSources) {
+                println("missing source: $source")
+            }
+            println("missing sources for $umlOutputFileName, skipping")
+        } else {
+            println("$umlOutputFileName already exists, skipping")
         }
 
-        val buildProcess = ProcessBuilder("kotlinc", "uml.kt", *sourceFiles.toTypedArray(), "-include-runtime", "-d", "uml.jar")
-            .apply { environment().remove("KOTLIN_RUNNER") }
-        val runProcess = ProcessBuilder("java", "-cp", "uml.jar", "umlGenerate.UmlKt", *classes.toTypedArray(), umlOutputFileName)
-        val generateDiagramProcess = ProcessBuilder("java", "-jar", "plantuml-1.2025.7.jar", "-tsvg", umlOutputFileName)
-
-        try {
-            completeProcess(buildProcess, "building uml.jar complete")
-            completeProcess(runProcess, "generated $umlOutputFileName")
-            completeProcess(generateDiagramProcess, "generated diagram for $umlOutputFileName")
-            println()
-        } catch (e: ProcessCompletionException) {
-            println(e.message)
-        } finally {
-            Path("uml.jar").deleteIfExists()
-        }
     }
 }
 
