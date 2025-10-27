@@ -6,6 +6,7 @@ package umlGenerate
 import java.io.File
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
+import kotlin.reflect.KClassifier
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty
@@ -109,6 +110,16 @@ fun KClass<*>.header(): String =
 fun KClass<*>.classDiagram(): String =
     "${this.header()}\n{\n${this.umlMembers()}\n}\n${this.relationships()}\n\n"
 
+fun KType.classifiersAndArgs(): Set<KClass<*>> {
+    val argumentSet: MutableSet<KClass<*>> = mutableSetOf()
+    if (this.classifier is KClass<*>)
+        argumentSet.add(this.classifier as KClass<*>)
+    this.arguments.mapNotNull { it.type }.forEach {
+        argumentSet.addAll(it.classifiersAndArgs())
+    }
+    return argumentSet.toSet()
+}
+
 fun KClass<*>.dependencySet(): Set<KClass<*>> {
     val dependencies: MutableSet<KClass<*>> = mutableSetOf()
 
@@ -119,10 +130,9 @@ fun KClass<*>.dependencySet(): Set<KClass<*>> {
         dependencies.addAll(listOf(method.returnType.classifier).filterIsInstance<KClass<*>>())
     }
 
-    dependencies.addAll(this.declaredProperties()
-        .map{ it.returnType.classifier }
-        .filterIsInstance<KClass<*>>()
-    )
+    for (property in this.declaredProperties()) {
+        dependencies.addAll(property.returnType.classifiersAndArgs())
+    }
 
     return dependencies.toSet()
 }
