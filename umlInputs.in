@@ -170,6 +170,12 @@ bruteForceSearch.DivisibilitySearchAlgorithm
 bruteForceSearch.MinimumSearchAlgorithm
 /home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/BruteForceSearch.uml
 
+/home/rub/Projects/CMSC23CoursePack/Code/Kotlin Code/TemplatePattern/template/template.kt
+template.Template
+template.Specialization1
+template.Specialization2
+/home/rub/Projects/CMSC23CoursePack/Markdown Lecture Notes and Lab Exercises/uml/umlOutputs/Template.uml
+
 /home/rub/Projects/lecturenotes/CMSC 23/solutions_and_tests/Kotlin/IteratorPattern/iterator/solution.kt
 iterator.Collection
 iterator.Iterator
